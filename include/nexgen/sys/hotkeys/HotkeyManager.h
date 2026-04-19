@@ -1,11 +1,12 @@
 #pragma once
 
 #include <QObject>
+#include <QAbstractNativeEventFilter>
 #include <functional>
 
 namespace nexgen::sys::hotkeys {
 
-class HotkeyManager final : public QObject {
+class HotkeyManager final : public QObject, public QAbstractNativeEventFilter {
   Q_OBJECT
 public:
   explicit HotkeyManager(QObject* parent = nullptr);
@@ -17,8 +18,8 @@ public:
 
   void setCallback(std::function<void(int id)> cb);
 
-protected:
-  bool nativeEventFilter(const QByteArray& eventType, void* message, qintptr* result);
+  // QAbstractNativeEventFilter
+  bool nativeEventFilter(const QByteArray& eventType, void* message, qintptr* result) override;
 
 private:
   std::function<void(int)> m_cb;
